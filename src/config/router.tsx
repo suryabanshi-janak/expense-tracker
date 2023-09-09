@@ -2,8 +2,11 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
-import Transactions from '../pages/Transactions';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import MainLayout from '@/components/MainLayout';
+import Transaction from '@/pages/Transaction';
+import Income from '@/pages/Income';
+import Expense from '@/pages/Expense';
+import Saving from '@/pages/Saving';
 
 export const router = createBrowserRouter([
   {
@@ -12,10 +15,13 @@ export const router = createBrowserRouter([
   },
   {
     path: '/',
-    element: <ProtectedRoute />,
+    element: <MainLayout />,
     children: [
       { index: true, element: <Dashboard /> },
-      { path: '/transactions', element: <Transactions /> },
+      { path: '/transactions', element: <Transaction /> },
+      { path: '/income', element: <Income /> },
+      { path: '/expenses', element: <Expense /> },
+      { path: '/savings', element: <Saving /> },
     ],
   },
 ]);
