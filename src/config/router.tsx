@@ -1,12 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import Login from '../pages/Login';
-import Dashboard from '../pages/Dashboard';
+import Login from '@/pages/Login';
+import Dashboard from '@/pages/Dashboard';
 import MainLayout from '@/components/MainLayout';
 import Transaction from '@/pages/Transaction';
 import Income from '@/pages/Income';
 import Expense from '@/pages/Expense';
 import Saving from '@/pages/Saving';
+import Category from '@/pages/Category';
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +23,7 @@ export const router = createBrowserRouter([
       { path: '/income', element: <Income /> },
       { path: '/expenses', element: <Expense /> },
       { path: '/savings', element: <Saving /> },
+      { path: '/categories', element: <Category /> },
     ],
   },
 ]);

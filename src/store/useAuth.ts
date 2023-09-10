@@ -9,7 +9,7 @@ export interface UserAuth {
 
 interface AuthStoreProps {
   auth: UserAuth | null;
-  setAuth: (auth: UserAuth) => void;
+  setAuth: (auth: UserAuth | null) => void;
 }
 
 export const useAuthStore = create<AuthStoreProps>()(
@@ -17,7 +17,7 @@ export const useAuthStore = create<AuthStoreProps>()(
     persist(
       (set) => ({
         auth: null,
-        setAuth: (auth: UserAuth) => set({ auth }),
+        setAuth: (auth: UserAuth | null) => set({ auth }),
       }),
       { name: 'auth' }
     )
