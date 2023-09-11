@@ -1,23 +1,28 @@
-import * as React from 'react';
-import { supabase } from '@/config/supabase';
+// import * as React from 'react';
+// import { supabase } from '@/config/supabase';
+import { CategoryDialog } from '@/components/dialog/CategoryDialog';
 
 export default function Category() {
-  const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  console.log('🚀 ~ file: Category.tsx:6 ~ Category ~ isLoading:', isLoading);
-  const [categories, setCategories] = React.useState<any>([]);
-  console.log('🚀 ~ file: Category.tsx:8 ~ Category ~ categories:', categories);
+  // const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  // const [categories, setCategories] = React.useState<any>([]);
 
-  React.useEffect(() => {
-    const fetchCategories = async () => {
-      const { data } = await supabase.from('categories').select();
-      if (data) {
-        setCategories(data);
-      }
-      setIsLoading(false);
-    };
+  // React.useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     const { data } = await supabase.from('categories').select();
+  //     if (data) {
+  //       setCategories(data);
+  //     }
+  //     setIsLoading(false);
+  //   };
 
-    fetchCategories();
-  }, []);
+  //   fetchCategories();
+  // }, []);
 
-  return <div>Category</div>;
+  return (
+    <>
+      <div className='flex justify-end'>
+        <CategoryDialog />
+      </div>
+    </>
+  );
 }
