@@ -1,6 +1,9 @@
 // import * as React from 'react';
 // import { supabase } from '@/config/supabase';
-import { CategoryDialog } from '@/components/dialog/CategoryDialog';
+
+import { Button, buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Link } from 'react-router-dom';
 
 export default function Category() {
   // const [isLoading, setIsLoading] = React.useState<boolean>(true);
@@ -21,7 +24,12 @@ export default function Category() {
   return (
     <>
       <div className='flex justify-end'>
-        <CategoryDialog />
+        <Link
+          to='/categories/create'
+          className={cn(buttonVariants({ variant: 'default' }))}
+        >
+          Create a Category
+        </Link>
       </div>
     </>
   );
