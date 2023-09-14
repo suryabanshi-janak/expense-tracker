@@ -9,6 +9,7 @@ import Expense from '@/pages/Expense';
 import Saving from '@/pages/Saving';
 import Category from '@/pages/Category';
 import CreateCategory from '@/pages/CreateCategory';
+import Lending from '@/pages/Lending';
 
 export const router = createBrowserRouter([
   {
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
           { path: 'create', element: <CreateCategory /> },
         ],
       },
+      { path: '/lendings', element: <Lending /> },
     ],
   },
 ]);

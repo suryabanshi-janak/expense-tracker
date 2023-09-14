@@ -1,35 +1,42 @@
-// import * as React from 'react';
-// import { supabase } from '@/config/supabase';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { supabase } from '@/config/supabase';
+import { CategoryWithSubCategory } from '@/types';
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-
-import { Button, buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
+import { getCategoryWithSubcategory } from '@/lib/modifier';
 import { cn } from '@/lib/utils';
-import { Link } from 'react-router-dom';
+import CategorySkeleton from '@/components/skeletons/CategorySkeleton';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-export default function Category() {
-  // const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  // const [categories, setCategories] = React.useState<any>([]);
+export default function CategoryPage() {
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  const [categories, setCategories] = React.useState<CategoryWithSubCategory[]>(
+    []
+  );
 
-  // React.useEffect(() => {
-  //   const fetchCategories = async () => {
-  //     const { data } = await supabase.from('categories').select();
-  //     if (data) {
-  //       setCategories(data);
-  //     }
-  //     setIsLoading(false);
-  //   };
+  React.useEffect(() => {
+    const fetchCategories = async () => {
+      const { data } = await supabase.from('categories').select();
+      if (data) {
+        const categories = getCategoryWithSubcategory(data);
+        setCategories(categories);
+      }
+      setIsLoading(false);
+    };
 
-  //   fetchCategories();
-  // }, []);
+    fetchCategories();
+  }, []);
 
   return (
     <>
-      <div className='flex justify-end'>
+      <div className='flex justify-end mb-4'>
         <Link
           to='/categories/create'
           className={cn(buttonVariants({ variant: 'default' }))}
@@ -38,30 +45,41 @@ export default function Category() {
         </Link>
       </div>
 
-      <div>
-        <Accordion type='single' collapsible className='w-full'>
-          <AccordionItem value='item-1'>
-            <AccordionTrigger>Is it accessible?</AccordionTrigger>
-            <AccordionContent>
-              Yes. It adheres to the WAI-ARIA design pattern.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value='item-2'>
-            <AccordionTrigger>Is it styled?</AccordionTrigger>
-            <AccordionContent>
-              Yes. It comes with default styles that matches the other
-              components&apos; aesthetic.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value='item-3'>
-            <AccordionTrigger>Is it animated?</AccordionTrigger>
-            <AccordionContent>
-              Yes. It&apos;s animated by default, but you can disable it if you
-              prefer.
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </div>
+      <Card>
+        <CardHeader className='pb-2'>
+          <CardTitle className='text-xl'>List of Categories</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <CategorySkeleton />
+          ) : (
+            <Accordion type='single' collapsible className='w-full'>
+              {categories?.map((category, index) => (
+                <AccordionItem value={`item-${index}`} key={category.id}>
+                  <AccordionTrigger className='font-normal hover:no-underline group'>
+                    <div className='flex flex-col items-start space-y-1'>
+                      <h2 className='text-base font-semibold group-hover:underline'>
+                        {category.name}
+                      </h2>
+                      <p className='text-muted-foreground'>
+                        {category?.description}
+                      </p>
+                    </div>
+                  </AccordionTrigger>
+                  {category?.subcategories?.map((subcategory) => (
+                    <AccordionContent
+                      key={subcategory.id}
+                      className='ml-4 font-semibold'
+                    >
+                      {subcategory.name}
+                    </AccordionContent>
+                  ))}
+                </AccordionItem>
+              ))}
+            </Accordion>
+          )}
+        </CardContent>
+      </Card>
     </>
   );
 }
