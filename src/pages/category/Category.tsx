@@ -1,7 +1,4 @@
-import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '@/config/supabase';
-import { CategoryWithSubCategory } from '@/types';
 
 import {
   Accordion,
@@ -10,29 +7,13 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { buttonVariants } from '@/components/ui/button';
-import { getCategoryWithSubcategory } from '@/lib/modifier';
 import { cn } from '@/lib/utils';
 import CategorySkeleton from '@/components/skeletons/CategorySkeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import useCategory from '@/features/useCategory';
 
 export default function CategoryPage() {
-  const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const [categories, setCategories] = React.useState<CategoryWithSubCategory[]>(
-    []
-  );
-
-  React.useEffect(() => {
-    const fetchCategories = async () => {
-      const { data } = await supabase.from('categories').select();
-      if (data) {
-        const categories = getCategoryWithSubcategory(data);
-        setCategories(categories);
-      }
-      setIsLoading(false);
-    };
-
-    fetchCategories();
-  }, []);
+  const { isLoading, categories } = useCategory();
 
   return (
     <>

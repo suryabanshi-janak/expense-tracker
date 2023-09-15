@@ -43,6 +43,7 @@ export interface Database {
           parent_id: string | null
           slug: string
           updated_at: string | null
+          user_id: string | null
         }
         Insert: {
           created_at?: string
@@ -52,6 +53,7 @@ export interface Database {
           parent_id?: string | null
           slug?: string
           updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           created_at?: string
@@ -61,8 +63,49 @@ export interface Database {
           parent_id?: string | null
           slug?: string
           updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
+      }
+      expenses: {
+        Row: {
+          amount: number
+          category_id: string
+          created_at: string
+          description: string
+          id: string
+          payment_date: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category_id: string
+          created_at?: string
+          description: string
+          id?: string
+          payment_date: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Update: {
+          amount?: number
+          category_id?: string
+          created_at?: string
+          description?: string
+          id?: string
+          payment_date?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expenses_category_id_fkey"
+            columns: ["category_id"]
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {

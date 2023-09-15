@@ -33,3 +33,12 @@ export function getCategoryWithSubcategory(categoryData: Category[]) {
 
   return categories;
 }
+
+export function getSubcategory(categoryData: Category[]) {
+  return categoryData.reduce((acc: Category[], subcategory: Category) => {
+    if (subcategory?.parent_id) {
+      acc.push(subcategory);
+    }
+    return acc;
+  }, []);
+}

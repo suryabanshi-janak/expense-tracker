@@ -19,9 +19,11 @@ import { slugify } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import { Icons } from '@/components/Icons';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/store/useAuth';
 
 export default function CreateCategory() {
   const navigate = useNavigate();
+  const { auth } = useAuthStore();
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [categoryError, setCategoryError] = React.useState<string>('');
@@ -45,14 +47,17 @@ export default function CreateCategory() {
     setIsLoading(true);
     const { name, description, subcategories } = data;
 
+    const newCategory = {
+      name,
+      description,
+      slug: slugify(name),
+      user_id: auth?.user.id || '',
+    };
     const {
       data: category,
       error,
       status,
-    } = await supabase
-      .from('categories')
-      .insert([{ name, description, slug: slugify(name) }])
-      .select();
+    } = await supabase.from('categories').insert([newCategory]).select();
 
     if (error) {
       let errorMessage = 'We are not able to create a new category.';
@@ -72,6 +77,7 @@ export default function CreateCategory() {
             name: subcategory.name,
             description: subcategory.description,
             slug: slugify(subcategory.name),
+            user_id: auth?.user.id || '',
           },
         ]);
 
@@ -82,6 +88,8 @@ export default function CreateCategory() {
           }
           setSubcategoryError(errorMessage);
           setIsLoading(false);
+
+          navigate('/categories');
           return;
         }
       });
