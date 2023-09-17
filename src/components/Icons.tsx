@@ -5,6 +5,8 @@ import {
   Calendar,
   MoreHorizontal,
   ArrowUpDown,
+  Copy,
+  Trash,
 } from 'lucide-react';
 
 export const Icons = {
@@ -14,4 +16,6 @@ export const Icons = {
   calendar: Calendar,
   more: MoreHorizontal,
   sort: ArrowUpDown,
+  copy: Copy,
+  delete: Trash,
 };
