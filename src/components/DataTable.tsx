@@ -23,13 +23,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-export type Payment = {
-  id: string;
-  amount: number;
-  status: 'pending' | 'processing' | 'success' | 'failed';
-  email: string;
-};
-
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -63,7 +56,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className='w-full'>
-      <div className='py-4 '>
+      {/* <div className='py-4 '>
         <Input
           placeholder='Filter emails...'
           value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
@@ -72,7 +65,7 @@ export function DataTable<TData, TValue>({
           }
           className='max-w-sm'
         />
-      </div>
+      </div> */}
       <div className='border rounded-md'>
         <Table>
           <TableHeader>

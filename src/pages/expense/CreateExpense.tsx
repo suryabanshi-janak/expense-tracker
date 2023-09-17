@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -29,11 +29,25 @@ import { ExpenseFormData, ExpenseValidator } from '@/lib/validator/expense';
 import useCategory from '@/features/useCategory';
 import { useAuthStore } from '@/store/useAuth';
 import { DatePicker } from '@/components/DatePicker';
+import { useExpenseStore } from '@/store/useExpense';
 
 export default function CreateExpense() {
   const { auth } = useAuthStore();
+  const { expenses } = useExpenseStore();
+
   const { subcategories } = useCategory();
   const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+  const expense = React.useMemo(() => {
+    const expenseId = searchParams.get('expense_id');
+    if (expenseId) {
+      const exp = expenses.find((expense) => expense.id === expenseId);
+      return exp;
+    }
+
+    return null;
+  }, [searchParams, expenses]);
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>('');
@@ -41,16 +55,18 @@ export default function CreateExpense() {
   const form = useForm<ExpenseFormData>({
     resolver: zodResolver(ExpenseValidator),
     defaultValues: {
-      category_id: '',
-      amount: '',
-      description: '',
-      payment_date: undefined,
+      category_id: expense?.category_id ?? '',
+      amount: String(expense?.amount) ?? '',
+      description: expense?.description ?? '',
+      payment_date: expense?.payment_date
+        ? new Date(expense?.payment_date)
+        : undefined,
     },
   });
 
   const onSubmit = async (data: ExpenseFormData) => {
     setIsLoading(true);
-    const expense = {
+    const expenseData = {
       category_id: data.category_id,
       amount: +data.amount,
       description: data.description,
@@ -58,7 +74,9 @@ export default function CreateExpense() {
       payment_date: data.payment_date.toISOString(),
     };
 
-    const { error } = await supabase.from('expenses').insert([expense]);
+    const { error } = expense
+      ? await supabase.from('expenses').update(expenseData).eq('id', expense.id)
+      : await supabase.from('expenses').insert([expenseData]);
 
     if (error) {
       setError(error.message);
@@ -89,7 +107,7 @@ export default function CreateExpense() {
       )}
 
       <h4 className='text-2xl font-bold tracking-tight scroll-m-20'>
-        Create expense
+        {expense ? 'Edit' : 'Create'} expense
       </h4>
 
       <Form {...form}>
@@ -175,7 +193,7 @@ export default function CreateExpense() {
               {isLoading && (
                 <Icons.spinner className='w-4 h-4 mr-2 animate-spin' />
               )}
-              Create
+              {expense ? 'Update' : 'Create'}
             </Button>
           </div>
         </form>

@@ -57,7 +57,9 @@ export default function Expenses() {
           <div className='flex items-center justify-center gap-2'>
             <Button
               variant='ghost'
-              onClick={() => navigate('/expenses/create')}
+              onClick={() =>
+                navigate(`/expenses/create?expense_id=${expenseId}`)
+              }
             >
               <Icons.copy className='w-4 h-4' />
             </Button>
@@ -81,7 +83,7 @@ export default function Expenses() {
 
   return (
     <>
-      <div className='flex justify-end'>
+      <div className='flex justify-end mb-4'>
         <Link
           to='/expenses/create'
           className={cn(buttonVariants({ variant: 'default' }))}
