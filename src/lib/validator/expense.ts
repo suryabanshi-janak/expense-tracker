@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-export const ExpenseValidator = z.object({
+export const SingleExpenseValidator = z.object({
   category_id: z.string().min(1, {
     message: 'Category is required',
   }),
@@ -13,4 +13,9 @@ export const ExpenseValidator = z.object({
   payment_date: z.date(),
 });
 
+export const ExpenseValidator = z.object({
+  expenses: z.array(SingleExpenseValidator),
+});
+
 export type ExpenseFormData = z.infer<typeof ExpenseValidator>;
+export type SingleExpenseFormData = z.infer<typeof SingleExpenseValidator>;

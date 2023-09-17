@@ -13,7 +13,6 @@ import {
 
 import { Button } from '@/components/ui/button';
 
-import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -22,6 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Skeleton } from './ui/skeleton';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -87,7 +87,21 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoading ? (
+              Array.from({ length: 6 }, (_, i) => i).map(() =>
+                table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      return (
+                        <TableCell key={header.id} className='py-3'>
+                          <Skeleton className='w-full h-4 rounded-md' />
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                ))
+              )
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}

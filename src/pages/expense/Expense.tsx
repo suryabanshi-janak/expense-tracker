@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { type ColumnDef } from '@tanstack/react-table';
@@ -9,21 +8,24 @@ import { DataTable } from '@/components/DataTable';
 import useDeleteCategory from '@/features/useDeleteCategory';
 import { Expense } from '@/types/collection';
 import { Icons } from '@/components/Icons';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 
 export default function Expenses() {
   const navigate = useNavigate();
 
   const { isLoading, expenses, refetch } = useExpense();
-  const { onDeleteCategory, isLoading: isDeleteLoading } = useDeleteCategory();
-
-  const [mutationId, setMutationId] = React.useState<string>('');
+  const { onDeleteCategory } = useDeleteCategory();
 
   const onDelete = async (id: string) => {
-    setMutationId(id);
     await onDeleteCategory(id);
     await refetch();
-    setMutationId('');
   };
 
   const columns: ColumnDef<Expense>[] = [
@@ -54,28 +56,27 @@ export default function Expenses() {
         const { id: expenseId } = row.original;
 
         return (
-          <div className='flex items-center justify-center gap-2'>
-            <Button
-              variant='ghost'
-              onClick={() =>
-                navigate(`/expenses/create?expense_id=${expenseId}`)
-              }
-            >
-              <Icons.copy className='w-4 h-4' />
-            </Button>
-
-            <Button
-              variant='ghost'
-              onClick={() => onDelete(expenseId)}
-              disabled={isDeleteLoading && mutationId === expenseId}
-            >
-              {isDeleteLoading && mutationId === expenseId ? (
-                <Icons.spinner className='w-4 h-4 animate-spin' />
-              ) : (
-                <Icons.delete className='w-4 h-4' />
-              )}
-            </Button>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='ghost' className='w-8 h-8 p-0'>
+                <span className='sr-only'>Open menu</span>
+                <Icons.more className='w-4 h-4' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end'>
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigate(`/expenses/create?expense_id=${expenseId}`)
+                }
+              >
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onDelete(expenseId)}>
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         );
       },
     },
