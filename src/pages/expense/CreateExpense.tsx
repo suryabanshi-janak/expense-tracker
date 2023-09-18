@@ -217,34 +217,40 @@ export default function CreateExpense() {
                 )}
               />
 
-              <div className='flex items-center gap-2'>
-                {index === fields.length - 1 && (
-                  <Button
-                    type='button'
-                    className='px-2'
-                    onClick={() =>
-                      append({
-                        category_id: '',
-                        amount: '',
-                        description: '',
-                        payment_date: new Date(),
-                      })
-                    }
-                  >
-                    Add new
-                  </Button>
-                )}
-                {fields.length > 1 && (
-                  <Button
-                    type='button'
-                    className='px-2'
-                    onClick={() => remove(index)}
-                  >
-                    Remove
-                  </Button>
-                )}
-              </div>
-              {fields.length - 1 !== index && <Separator className='my-4' />}
+              {!expense ? (
+                <>
+                  <div className='flex items-center gap-2'>
+                    {index === fields.length - 1 && (
+                      <Button
+                        type='button'
+                        className='px-2'
+                        onClick={() =>
+                          append({
+                            category_id: '',
+                            amount: '',
+                            description: '',
+                            payment_date: new Date(),
+                          })
+                        }
+                      >
+                        Add new
+                      </Button>
+                    )}
+                    {fields.length > 1 && (
+                      <Button
+                        type='button'
+                        className='px-2'
+                        onClick={() => remove(index)}
+                      >
+                        Remove
+                      </Button>
+                    )}
+                  </div>
+                  {fields.length - 1 !== index && (
+                    <Separator className='my-4' />
+                  )}
+                </>
+              ) : null}
             </div>
           ))}
 

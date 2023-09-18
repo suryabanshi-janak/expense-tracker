@@ -20,7 +20,7 @@ import { cn } from '@/lib/utils';
 export default function Expenses() {
   const navigate = useNavigate();
 
-  const { isLoading, expenses, refetch } = useExpense();
+  const { isLoading, expenses, refetch, pageCount } = useExpense();
   const { onDeleteCategory } = useDeleteCategory();
 
   const onDelete = async (id: string) => {
@@ -93,7 +93,13 @@ export default function Expenses() {
         </Link>
       </div>
 
-      <DataTable isLoading={isLoading} data={expenses} columns={columns} />
+      <DataTable
+        isLoading={isLoading}
+        data={expenses}
+        columns={columns}
+        pageCount={pageCount}
+        refetch={refetch}
+      />
     </>
   );
 }

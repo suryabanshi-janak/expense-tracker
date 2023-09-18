@@ -2,31 +2,44 @@ import * as React from 'react';
 import { supabase } from '@/config/supabase';
 import { Expense } from '@/types/collection';
 import { useExpenseStore } from '@/store/useExpense';
+import { DEFAULT_TABLE_LIMIT } from '@/constants';
 
 const useExpense = () => {
   const { setExpenses } = useExpenseStore();
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [expenseData, setExpenseData] = React.useState<Expense[]>([]);
+  const [pageCount, setPageCount] = React.useState<number>(0);
 
-  const fetchCategories = React.useCallback(async () => {
-    setIsLoading(true);
-    const { data, error } = await supabase
-      .from('expenses')
-      .select(`*, categories(name, slug)`);
-    if (data) {
-      setExpenseData(data);
-      setExpenses(data);
-    }
-    if (error) setExpenses([]);
-    setIsLoading(false);
-  }, []);
+  const fetchCategories = React.useCallback(
+    async (lower?: number, upper?: number) => {
+      setIsLoading(true);
+      const { data, error, count } = await supabase
+        .from('expenses')
+        .select(`*, categories(name, slug)`, { count: 'exact' })
+        .range(lower ?? 0, upper ?? DEFAULT_TABLE_LIMIT - 1);
+
+      if (data) {
+        setExpenseData(data);
+        setExpenses(data);
+        setPageCount(count ? Math.ceil(count / DEFAULT_TABLE_LIMIT) : -1);
+      }
+      if (error) setExpenses([]);
+      setIsLoading(false);
+    },
+    []
+  );
 
   React.useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
 
-  return { isLoading, expenses: expenseData, refetch: fetchCategories };
+  return {
+    isLoading,
+    expenses: expenseData,
+    refetch: fetchCategories,
+    pageCount,
+  };
 };
 
 export default useExpense;

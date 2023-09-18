@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
+  PaginationState,
   SortingState,
   flexRender,
   getCoreRowModel,
@@ -27,32 +28,67 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isLoading?: boolean;
+  pageCount?: number;
+  refetch: (lower: number, upper: number) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   isLoading = false,
+  pageCount = -1,
+  refetch,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [{ pageIndex, pageSize }, setPagination] =
+    React.useState<PaginationState>({
+      pageIndex: 0,
+      pageSize: 2,
+    });
+
+  const pagination = React.useMemo(
+    () => ({
+      pageIndex,
+      pageSize,
+    }),
+    [pageIndex, pageSize]
+  );
 
   const table = useReactTable({
     data,
     columns,
+    pageCount,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    onPaginationChange: setPagination,
+    manualPagination: true,
     state: {
       sorting,
       columnFilters,
+      pagination,
     },
   });
+
+  const onPrevious = async () => {
+    const lower = pageIndex * pageSize - pageSize;
+    const upper = lower + pageSize - 1;
+    await refetch(lower, upper);
+    table.previousPage();
+  };
+
+  const onNext = async () => {
+    const lower = (pageIndex + 1) * pageSize;
+    const upper = lower + pageSize - 1;
+    await refetch(lower, upper);
+    table.nextPage();
+  };
 
   return (
     <div className='w-full'>
@@ -131,12 +167,15 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className='flex justify-end py-4'>
+      <div className='flex items-center justify-between py-4'>
+        <p className='text-sm text-muted-foreground'>
+          Page {pageIndex + 1} of {pageCount}
+        </p>
         <div className='space-x-2'>
           <Button
             variant='outline'
             size='sm'
-            onClick={() => table.previousPage()}
+            onClick={onPrevious}
             disabled={!table.getCanPreviousPage()}
           >
             Previous
@@ -144,7 +183,7 @@ export function DataTable<TData, TValue>({
           <Button
             variant='outline'
             size='sm'
-            onClick={() => table.nextPage()}
+            onClick={onNext}
             disabled={!table.getCanNextPage()}
           >
             Next
