@@ -22,7 +22,7 @@ import { supabase } from '@/config/supabase';
 const navs: { title: string; href: string }[] = [
   { title: 'Dashboad', href: '/' },
   { title: 'Category', href: '/categories' },
-  { title: 'Income', href: '/income' },
+  { title: 'Income', href: '/incomes' },
   { title: 'Expense', href: '/expenses' },
   { title: 'Saving', href: '/savings' },
   { title: 'Lending', href: '/lendings' },

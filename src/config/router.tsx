@@ -4,7 +4,7 @@ import Login from '@/pages/Login';
 import Dashboard from '@/pages/Dashboard';
 import MainLayout from '@/components/MainLayout';
 import Transaction from '@/pages/Transaction';
-import Income from '@/pages/Income';
+import Income from '@/pages/income/Income';
 import Saving from '@/pages/Saving';
 import Category from '@/pages/category/Category';
 import CreateCategory from '@/pages/category/CreateCategory';
@@ -23,7 +23,13 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Dashboard /> },
       { path: '/transactions', element: <Transaction /> },
-      { path: '/income', element: <Income /> },
+      {
+        path: '/incomes',
+        children: [
+          { index: true, element: <Income /> },
+          { path: 'create', element: <Income /> },
+        ],
+      },
       {
         path: '/expenses',
         children: [

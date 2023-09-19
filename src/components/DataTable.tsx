@@ -28,7 +28,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isLoading?: boolean;
-  pageCount?: number;
+  pageCount: number;
   refetch: (lower: number, upper: number) => void;
 }
 
@@ -36,7 +36,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   isLoading = false,
-  pageCount = -1,
+  pageCount,
   refetch,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -167,29 +167,31 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className='flex items-center justify-between py-4'>
-        <p className='text-sm text-muted-foreground'>
-          Page {pageIndex + 1} of {pageCount}
-        </p>
-        <div className='space-x-2'>
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={onPrevious}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={onNext}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
+      {data.length ? (
+        <div className='flex items-center justify-between py-4'>
+          <p className='text-sm text-muted-foreground'>
+            Page {pageIndex + 1} of {pageCount}
+          </p>
+          <div className='space-x-2'>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={onPrevious}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </Button>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={onNext}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 }
