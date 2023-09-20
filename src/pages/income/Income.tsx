@@ -51,7 +51,7 @@ export default function Incomes() {
       id: 'actions',
       enableHiding: false,
       cell: ({ row }) => {
-        const { id: expenseId } = row.original;
+        const { id: incomeId } = row.original;
 
         return (
           <DropdownMenu>
@@ -65,12 +65,12 @@ export default function Incomes() {
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() =>
-                  navigate(`/incomes/create?income_id=${expenseId}`)
+                  navigate(`/incomes/create?income_id=${incomeId}`)
                 }
               >
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onDelete(expenseId)}>
+              <DropdownMenuItem onClick={() => onDelete(incomeId)}>
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>

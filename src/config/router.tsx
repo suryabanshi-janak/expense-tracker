@@ -11,6 +11,7 @@ import CreateCategory from '@/pages/category/CreateCategory';
 import Lending from '@/pages/Lending';
 import Expense from '@/pages/expense/Expense';
 import CreateExpense from '@/pages/expense/CreateExpense';
+import CreateIncome from '@/pages/income/CreateIncome';
 
 export const router = createBrowserRouter([
   {
@@ -27,7 +28,7 @@ export const router = createBrowserRouter([
         path: '/incomes',
         children: [
           { index: true, element: <Income /> },
-          { path: 'create', element: <Income /> },
+          { path: 'create', element: <CreateIncome /> },
         ],
       },
       {
