@@ -31,7 +31,7 @@ import {
   ExpenseValidator,
   SingleExpenseFormData,
 } from '@/lib/validator/expense';
-import useCategory from '@/features/useCategory';
+import useCategory from '@/services/useCategory';
 import { useAuthStore } from '@/store/useAuth';
 import { DatePicker } from '@/components/DatePicker';
 import { useExpenseStore } from '@/store/useExpense';

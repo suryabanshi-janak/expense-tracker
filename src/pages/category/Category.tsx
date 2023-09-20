@@ -10,7 +10,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import CategorySkeleton from '@/components/skeletons/CategorySkeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import useCategory from '@/features/useCategory';
+import useCategory from '@/services/useCategory';
 
 export default function CategoryPage() {
   const { isLoading, categories } = useCategory();

@@ -14,15 +14,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import useIncome from '@/features/useIncome';
+import useIncome from '@/services/useIncome';
+import useDeleteIncome from '@/services/useDeleteIncome';
 
 export default function Incomes() {
   const navigate = useNavigate();
 
   const { isLoading, incomes, refetch, pageCount } = useIncome();
+  const { onDeleteIncome } = useDeleteIncome();
 
   const onDelete = async (id: string) => {
-    // await onDeleteCategory(id);
+    await onDeleteIncome(id);
     await refetch();
   };
 

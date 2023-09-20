@@ -2,10 +2,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { type ColumnDef } from '@tanstack/react-table';
 
-import useExpense from '@/features/useExpense';
+import useExpense from '@/services/useExpense';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { DataTable } from '@/components/DataTable';
-import useDeleteCategory from '@/features/useDeleteCategory';
+import useDeleteCategory from '@/services/useDeleteCategory';
 import { Expense } from '@/types/collection';
 import { Icons } from '@/components/Icons';
 import {
