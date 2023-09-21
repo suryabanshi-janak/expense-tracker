@@ -167,7 +167,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      {data.length ? (
+      {pageCount > 1 ? (
         <div className='flex items-center justify-between py-4'>
           <p className='text-sm text-muted-foreground'>
             Page {pageIndex + 1} of {pageCount}
