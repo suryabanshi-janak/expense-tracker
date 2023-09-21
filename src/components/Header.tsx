@@ -25,7 +25,7 @@ const navs: { title: string; href: string }[] = [
   { title: 'Income', href: '/incomes' },
   { title: 'Expense', href: '/expenses' },
   { title: 'Saving', href: '/savings' },
-  { title: 'Lending', href: '/lendings' },
+  { title: 'Loan Registry', href: '/loans' },
   { title: 'Transaction', href: '/transactions' },
 ];
 

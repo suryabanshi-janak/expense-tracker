@@ -36,6 +36,9 @@ import { useAuthStore } from '@/store/useAuth';
 import { DatePicker } from '@/components/DatePicker';
 import { useExpenseStore } from '@/store/useExpense';
 import { Separator } from '@/components/ui/separator';
+import { getTransactionPayload } from '@/lib/modifier';
+import { TransactionType } from '@/types';
+import { Expense } from '@/types/collection';
 
 const getExpensePayload = (expense: SingleExpenseFormData, userId: string) => {
   return {
@@ -91,19 +94,35 @@ export default function CreateExpense() {
 
   const onSubmit = async (data: ExpenseFormData) => {
     setIsLoading(true);
-    let res: PostgrestSingleResponse<null> | null = null;
+    let res: PostgrestSingleResponse<Expense[]> | null = null;
 
     if (expense) {
       const expenseData = getExpensePayload(data.expenses[0], auth!.user.id);
       res = await supabase
         .from('expenses')
         .update(expenseData)
-        .eq('id', expense.id);
+        .eq('id', expense.id)
+        .select('*');
     } else {
       const newExpenses = data.expenses.map((expense) =>
         getExpensePayload(expense, auth!.user.id)
       );
-      res = await supabase.from('expenses').insert(newExpenses);
+      res = await supabase.from('expenses').insert(newExpenses).select('*');
+
+      if (res.data) {
+        const transactions = res.data.map((expense) =>
+          getTransactionPayload({
+            type: TransactionType.EXPENSE,
+            data: expense,
+          })
+        );
+        const { error: transactionError } = await supabase
+          .from('transactions')
+          .insert(transactions);
+        if (transactionError) {
+          // show toaster message
+        }
+      }
     }
 
     if (res?.error) {
@@ -115,9 +134,9 @@ export default function CreateExpense() {
     navigate('/expenses');
   };
 
-  React.useEffect(() => {
-    error && setError('');
-  }, [form.watch()]);
+  // React.useEffect(() => {
+  //   error && setError('');
+  // }, [form.watch()]);
 
   const onBack = () => navigate(-1);
 

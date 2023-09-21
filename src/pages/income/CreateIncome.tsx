@@ -27,6 +27,9 @@ import {
   IncomeValidator,
   SingleIncomeFormData,
 } from '@/lib/validator/income';
+import { Income } from '@/types/collection';
+import { getTransactionPayload } from '@/lib/modifier';
+import { TransactionType } from '@/types';
 
 const getIncomePayload = (income: SingleIncomeFormData, userId: string) => {
   return {
@@ -78,19 +81,35 @@ export default function CreateIncome() {
 
   const onSubmit = async (data: IncomeFormData) => {
     setIsLoading(true);
-    let res: PostgrestSingleResponse<null> | null = null;
+    let res: PostgrestSingleResponse<Income[]> | null = null;
 
     if (income) {
       const incomeData = getIncomePayload(data.incomes[0], auth!.user.id);
       res = await supabase
         .from('incomes')
         .update(incomeData)
-        .eq('id', income.id);
+        .eq('id', income.id)
+        .select('*');
     } else {
       const newIncome = data.incomes.map((income) =>
         getIncomePayload(income, auth!.user.id)
       );
-      res = await supabase.from('incomes').insert(newIncome);
+      res = await supabase.from('incomes').insert(newIncome).select('*');
+
+      if (res.data) {
+        const transactions = res.data.map((income) =>
+          getTransactionPayload({
+            type: TransactionType.INCOME,
+            data: income,
+          })
+        );
+        const { error: transactionError } = await supabase
+          .from('transactions')
+          .insert(transactions);
+        if (transactionError) {
+          // show toaster message
+        }
+      }
     }
 
     if (res?.error) {

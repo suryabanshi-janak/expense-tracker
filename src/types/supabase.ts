@@ -112,6 +112,155 @@ export interface Database {
         };
         Relationships: [];
       };
+      loans: {
+        Row: {
+          amount: number;
+          created_at: string;
+          description: string | null;
+          id: number;
+          loan_date: string;
+          payee_payor: string;
+          status: Database['public']['Enums']['loan_status_enum'];
+          updated_at: string | null;
+        };
+        Insert: {
+          amount: number;
+          created_at?: string;
+          description?: string | null;
+          id?: number;
+          loan_date: string;
+          payee_payor: string;
+          status?: Database['public']['Enums']['loan_status_enum'];
+          updated_at?: string | null;
+        };
+        Update: {
+          amount?: number;
+          created_at?: string;
+          description?: string | null;
+          id?: number;
+          loan_date?: string;
+          payee_payor?: string;
+          status?: Database['public']['Enums']['loan_status_enum'];
+          updated_at?: string | null;
+        };
+        Relationships: [];
+      };
+      saving_institutions: {
+        Row: {
+          created_at: string;
+          id: string;
+          name: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          name: string;
+          updated_at: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          name?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      savings: {
+        Row: {
+          amount: number;
+          created_at: string;
+          description: string;
+          id: string;
+          institution: string;
+          saving_date: string;
+          updated_at: string | null;
+        };
+        Insert: {
+          amount: number;
+          created_at?: string;
+          description: string;
+          id?: string;
+          institution: string;
+          saving_date: string;
+          updated_at?: string | null;
+        };
+        Update: {
+          amount?: number;
+          created_at?: string;
+          description?: string;
+          id?: string;
+          institution?: string;
+          saving_date?: string;
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'savings_institution_fkey';
+            columns: ['institution'];
+            referencedRelation: 'saving_institutions';
+            referencedColumns: ['id'];
+          }
+        ];
+      };
+      transactions: {
+        Row: {
+          amount: number;
+          created_at: string;
+          description: string;
+          expense_id: string | null;
+          id: string;
+          income_id: string | null;
+          saving_id: string | null;
+          transaction_date: string;
+          transaction_type: Database['public']['Enums']['transaction_type_enum'];
+          updated_at: string | null;
+        };
+        Insert: {
+          amount: number;
+          created_at?: string;
+          description: string;
+          expense_id?: string | null;
+          id?: string;
+          income_id?: string | null;
+          saving_id?: string | null;
+          transaction_date: string;
+          transaction_type?: Database['public']['Enums']['transaction_type_enum'];
+          updated_at?: string | null;
+        };
+        Update: {
+          amount?: number;
+          created_at?: string;
+          description?: string;
+          expense_id?: string | null;
+          id?: string;
+          income_id?: string | null;
+          saving_id?: string | null;
+          transaction_date?: string;
+          transaction_type?: Database['public']['Enums']['transaction_type_enum'];
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'transactions_expense_id_fkey';
+            columns: ['expense_id'];
+            referencedRelation: 'expenses';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'transactions_income_id_fkey';
+            columns: ['income_id'];
+            referencedRelation: 'incomes';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'transactions_saving_id_fkey';
+            columns: ['saving_id'];
+            referencedRelation: 'savings';
+            referencedColumns: ['id'];
+          }
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -120,7 +269,8 @@ export interface Database {
       [_ in never]: never;
     };
     Enums: {
-      [_ in never]: never;
+      loan_status_enum: 'Pending' | 'Paid' | 'Defaulted';
+      transaction_type_enum: 'Expense' | 'Income' | 'Saving' | 'Loan';
     };
     CompositeTypes: {
       [_ in never]: never;

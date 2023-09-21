@@ -8,7 +8,7 @@ import Income from '@/pages/income/Income';
 import Saving from '@/pages/Saving';
 import Category from '@/pages/category/Category';
 import CreateCategory from '@/pages/category/CreateCategory';
-import Lending from '@/pages/Lending';
+import Loan from '@/pages/Loan';
 import Expense from '@/pages/expense/Expense';
 import CreateExpense from '@/pages/expense/CreateExpense';
 import CreateIncome from '@/pages/income/CreateIncome';
@@ -46,7 +46,7 @@ export const router = createBrowserRouter([
           { path: 'create', element: <CreateCategory /> },
         ],
       },
-      { path: '/lendings', element: <Lending /> },
+      { path: '/loans', element: <Loan /> },
     ],
   },
 ]);

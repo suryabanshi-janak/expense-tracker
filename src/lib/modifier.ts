@@ -1,5 +1,5 @@
-import { CategoryWithSubCategory } from '@/types';
-import { Category } from '@/types/collection';
+import { CategoryWithSubCategory, TransactionType } from '@/types';
+import { Category, Expense, Income, Loan, Saving } from '@/types/collection';
 
 export function getCategoryWithSubcategory(categoryData: Category[]) {
   // first data are sorted, so parent categories come before sub categories
@@ -42,3 +42,27 @@ export function getSubcategory(categoryData: Category[]) {
     return acc;
   }, []);
 }
+
+type TransactionData = Income | Expense | Loan | Saving;
+export const getTransactionPayload = ({
+  type,
+  data,
+}: {
+  type: TransactionType;
+  data: TransactionData;
+}) => {
+  let payload: any = {
+    amount: data.amount,
+    description: data.description as string,
+    transaction_type: type,
+  };
+  if (type === TransactionType.EXPENSE) {
+    payload.transaction_date = (data as Expense).payment_date;
+    payload.expense_id = (data as Expense).id;
+  }
+  if (type === TransactionType.INCOME) {
+    payload.transaction_date = (data as Income).income_date;
+    payload.income_id = (data as Income).id;
+  }
+  return payload;
+};
