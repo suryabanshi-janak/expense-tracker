@@ -66,6 +66,10 @@ export const getTransactionPayload = ({
     payload.transaction_date = (data as Income).income_date;
     payload.income_id = (data as Income).id;
   }
+  if (type === TransactionType.SAVING) {
+    payload.transaction_date = (data as Saving).saving_date;
+    payload.saving_id = (data as Income).id;
+  }
   if (update) {
     delete payload.expense_id;
     delete payload.income_id;

@@ -88,7 +88,7 @@ export default function Savings() {
     <>
       <div className='flex justify-end mb-4'>
         <Link
-          to='/incomes/create'
+          to='/savings/create'
           className={cn(buttonVariants({ variant: 'default' }))}
         >
           Create saving

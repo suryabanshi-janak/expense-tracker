@@ -12,6 +12,7 @@ import Loan from '@/pages/Loan';
 import Expense from '@/pages/expense/Expense';
 import CreateExpense from '@/pages/expense/CreateExpense';
 import CreateIncome from '@/pages/income/CreateIncome';
+import CreateSaving from '@/pages/saving/CreateSaving';
 
 export const router = createBrowserRouter([
   {
@@ -38,7 +39,13 @@ export const router = createBrowserRouter([
           { path: 'create', element: <CreateExpense /> },
         ],
       },
-      { path: '/savings', element: <Saving /> },
+      {
+        path: '/savings',
+        children: [
+          { index: true, element: <Saving /> },
+          { path: 'create', element: <CreateSaving /> },
+        ],
+      },
       {
         path: '/categories',
         children: [
