@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Card, CardHeader, CardBody, Button, Input } from '@nextui-org/react';
 import { supabase } from '@/config/supabase';
-import { useAuthStore } from '@/store/useAuth';
+import { useAuthStore } from '@/store/useAuthStore';
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {

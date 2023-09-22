@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuthStore } from '@/store/useAuth';
+import { useAuthStore } from '@/store/useAuthStore';
 
 import { Header } from './Header';
 

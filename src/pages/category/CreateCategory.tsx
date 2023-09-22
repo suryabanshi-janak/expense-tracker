@@ -19,7 +19,7 @@ import { slugify } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import { Icons } from '@/components/Icons';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@/store/useAuth';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function CreateCategory() {
   const navigate = useNavigate();

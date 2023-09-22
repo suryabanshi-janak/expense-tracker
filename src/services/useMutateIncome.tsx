@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/config/supabase';
 import { getTransactionPayload } from '@/lib/modifier';
-import { useAuthStore } from '@/store/useAuth';
+import { useAuthStore } from '@/store/useAuthStore';
 import { TransactionType } from '@/types';
 import { Income, Transaction } from '@/types/collection';
 import { IncomeFormData, SingleIncomeFormData } from '@/lib/validator/income';

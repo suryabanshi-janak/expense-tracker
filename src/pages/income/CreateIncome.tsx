@@ -18,7 +18,7 @@ import {
 import { Icons } from '@/components/Icons';
 import { DatePicker } from '@/components/DatePicker';
 import { Separator } from '@/components/ui/separator';
-import { useIncomeStore } from '@/store/useIncome';
+import { useIncomeStore } from '@/store/useIncomeStore';
 import { IncomeFormData, IncomeValidator } from '@/lib/validator/income';
 import useMutateIncome from '@/services/useMutateIncome';
 import useTransaction from '@/services/useTransaction';

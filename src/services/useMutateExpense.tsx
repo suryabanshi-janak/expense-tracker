@@ -5,7 +5,7 @@ import {
   ExpenseFormData,
   SingleExpenseFormData,
 } from '@/lib/validator/expense';
-import { useAuthStore } from '@/store/useAuth';
+import { useAuthStore } from '@/store/useAuthStore';
 import { TransactionType } from '@/types';
 import { Expense, Transaction } from '@/types/collection';
 

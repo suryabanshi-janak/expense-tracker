@@ -5,7 +5,7 @@ import Dashboard from '@/pages/Dashboard';
 import MainLayout from '@/components/MainLayout';
 import Transaction from '@/pages/Transaction';
 import Income from '@/pages/income/Income';
-import Saving from '@/pages/Saving';
+import Saving from '@/pages/saving/Saving';
 import Category from '@/pages/category/Category';
 import CreateCategory from '@/pages/category/CreateCategory';
 import Loan from '@/pages/Loan';

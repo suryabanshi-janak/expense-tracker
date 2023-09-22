@@ -27,7 +27,7 @@ import { Icons } from '@/components/Icons';
 import { ExpenseFormData, ExpenseValidator } from '@/lib/validator/expense';
 import useCategory from '@/services/useCategory';
 import { DatePicker } from '@/components/DatePicker';
-import { useExpenseStore } from '@/store/useExpense';
+import { useExpenseStore } from '@/store/useExpenseStore';
 import { Separator } from '@/components/ui/separator';
 import useTransaction from '@/services/useTransaction';
 import { Skeleton } from '@/components/ui/skeleton';

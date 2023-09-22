@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { supabase } from '@/config/supabase';
 import { Expense } from '@/types/collection';
-import { useExpenseStore } from '@/store/useExpense';
+import { useExpenseStore } from '@/store/useExpenseStore';
 import { DEFAULT_TABLE_LIMIT } from '@/constants';
 
 const useExpense = () => {
@@ -11,7 +11,7 @@ const useExpense = () => {
   const [expenseData, setExpenseData] = React.useState<Expense[]>([]);
   const [pageCount, setPageCount] = React.useState<number>(0);
 
-  const fetchCategories = React.useCallback(
+  const fetchExpenses = React.useCallback(
     async (lower?: number, upper?: number) => {
       setIsLoading(true);
       const { data, error, count } = await supabase
@@ -31,13 +31,13 @@ const useExpense = () => {
   );
 
   React.useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
+    fetchExpenses();
+  }, [fetchExpenses]);
 
   return {
     isLoading,
     expenses: expenseData,
-    refetch: fetchCategories,
+    refetch: fetchExpenses,
     pageCount,
   };
 };
