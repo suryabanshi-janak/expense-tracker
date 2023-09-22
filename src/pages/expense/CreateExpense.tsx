@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type PostgrestSingleResponse } from '@supabase/supabase-js';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,37 +23,22 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-import { supabase } from '@/config/supabase';
 import { Icons } from '@/components/Icons';
-import {
-  ExpenseFormData,
-  ExpenseValidator,
-  SingleExpenseFormData,
-} from '@/lib/validator/expense';
+import { ExpenseFormData, ExpenseValidator } from '@/lib/validator/expense';
 import useCategory from '@/services/useCategory';
-import { useAuthStore } from '@/store/useAuth';
 import { DatePicker } from '@/components/DatePicker';
 import { useExpenseStore } from '@/store/useExpense';
 import { Separator } from '@/components/ui/separator';
-import { getTransactionPayload } from '@/lib/modifier';
-import { TransactionType } from '@/types';
-import { Expense } from '@/types/collection';
-
-const getExpensePayload = (expense: SingleExpenseFormData, userId: string) => {
-  return {
-    category_id: expense.category_id,
-    amount: +expense.amount,
-    description: expense.description,
-    user_id: userId,
-    payment_date: expense.payment_date.toISOString(),
-  };
-};
+import useTransaction from '@/services/useTransaction';
+import { Skeleton } from '@/components/ui/skeleton';
+import useMutateExpense from '@/services/useMutateExpense';
 
 export default function CreateExpense() {
-  const { auth } = useAuthStore();
   const { expenses } = useExpenseStore();
 
-  const { subcategories } = useCategory();
+  const { subcategories, isLoading: isCategoryLoading } = useCategory();
+  const { transactions } = useTransaction();
+  const { createExpense, updateExpense } = useMutateExpense();
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
@@ -93,45 +77,11 @@ export default function CreateExpense() {
   });
 
   const onSubmit = async (data: ExpenseFormData) => {
-    setIsLoading(true);
-    let res: PostgrestSingleResponse<Expense[]> | null = null;
-
     if (expense) {
-      const expenseData = getExpensePayload(data.expenses[0], auth!.user.id);
-      res = await supabase
-        .from('expenses')
-        .update(expenseData)
-        .eq('id', expense.id)
-        .select('*');
+      updateExpense({ data, expense, setIsLoading, setError, transactions });
     } else {
-      const newExpenses = data.expenses.map((expense) =>
-        getExpensePayload(expense, auth!.user.id)
-      );
-      res = await supabase.from('expenses').insert(newExpenses).select('*');
-
-      if (res.data) {
-        const transactions = res.data.map((expense) =>
-          getTransactionPayload({
-            type: TransactionType.EXPENSE,
-            data: expense,
-          })
-        );
-        const { error: transactionError } = await supabase
-          .from('transactions')
-          .insert(transactions);
-        if (transactionError) {
-          // show toaster message
-        }
-      }
+      createExpense({ data, setIsLoading, setError });
     }
-
-    if (res?.error) {
-      setError(res.error.message);
-      setIsLoading(false);
-      return;
-    }
-    setIsLoading(false);
-    navigate('/expenses');
   };
 
   // React.useEffect(() => {
@@ -181,27 +131,31 @@ export default function CreateExpense() {
                   <FormItem>
                     <FormLabel>Category</FormLabel>
                     <FormControl>
-                      <Select
-                        {...field}
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <SelectTrigger className='w-full'>
-                          <SelectValue placeholder='Select a categpry' />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            {subcategories?.map((subcategory) => (
-                              <SelectItem
-                                value={subcategory.id}
-                                key={subcategory.id}
-                              >
-                                {subcategory.name}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
+                      {isCategoryLoading ? (
+                        <Skeleton className='w-full h-8 rounded-md' />
+                      ) : (
+                        <Select
+                          {...field}
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger className='w-full'>
+                            <SelectValue placeholder='Select a categpry' />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              {subcategories?.map((subcategory) => (
+                                <SelectItem
+                                  value={subcategory.id}
+                                  key={subcategory.id}
+                                >
+                                  {subcategory.name}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -274,7 +228,11 @@ export default function CreateExpense() {
           ))}
 
           <div className='flex justify-center'>
-            <Button type='submit' className='px-8 mt-8' disabled={isLoading}>
+            <Button
+              type='submit'
+              className='px-8 mt-8'
+              disabled={isLoading || isCategoryLoading}
+            >
               {isLoading && (
                 <Icons.spinner className='w-4 h-4 mr-2 animate-spin' />
               )}

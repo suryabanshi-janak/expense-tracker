@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type PostgrestSingleResponse } from '@supabase/supabase-js';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,33 +15,19 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 
-import { supabase } from '@/config/supabase';
 import { Icons } from '@/components/Icons';
-import { useAuthStore } from '@/store/useAuth';
 import { DatePicker } from '@/components/DatePicker';
 import { Separator } from '@/components/ui/separator';
 import { useIncomeStore } from '@/store/useIncome';
-import {
-  IncomeFormData,
-  IncomeValidator,
-  SingleIncomeFormData,
-} from '@/lib/validator/income';
-import { Income } from '@/types/collection';
-import { getTransactionPayload } from '@/lib/modifier';
-import { TransactionType } from '@/types';
-
-const getIncomePayload = (income: SingleIncomeFormData, userId: string) => {
-  return {
-    amount: +income.amount,
-    description: income.description,
-    user_id: userId,
-    income_date: income.income_date.toISOString(),
-  };
-};
+import { IncomeFormData, IncomeValidator } from '@/lib/validator/income';
+import useMutateIncome from '@/services/useMutateIncome';
+import useTransaction from '@/services/useTransaction';
 
 export default function CreateIncome() {
-  const { auth } = useAuthStore();
   const { incomes } = useIncomeStore();
+
+  const { transactions } = useTransaction();
+  const { createIncome, updateIncome } = useMutateIncome();
 
   const navigate = useNavigate();
 
@@ -80,50 +65,16 @@ export default function CreateIncome() {
   });
 
   const onSubmit = async (data: IncomeFormData) => {
-    setIsLoading(true);
-    let res: PostgrestSingleResponse<Income[]> | null = null;
-
     if (income) {
-      const incomeData = getIncomePayload(data.incomes[0], auth!.user.id);
-      res = await supabase
-        .from('incomes')
-        .update(incomeData)
-        .eq('id', income.id)
-        .select('*');
+      updateIncome({ data, income, setIsLoading, setError, transactions });
     } else {
-      const newIncome = data.incomes.map((income) =>
-        getIncomePayload(income, auth!.user.id)
-      );
-      res = await supabase.from('incomes').insert(newIncome).select('*');
-
-      if (res.data) {
-        const transactions = res.data.map((income) =>
-          getTransactionPayload({
-            type: TransactionType.INCOME,
-            data: income,
-          })
-        );
-        const { error: transactionError } = await supabase
-          .from('transactions')
-          .insert(transactions);
-        if (transactionError) {
-          // show toaster message
-        }
-      }
+      createIncome({ data, setIsLoading, setError });
     }
-
-    if (res?.error) {
-      setError(res.error.message);
-      setIsLoading(false);
-      return;
-    }
-    setIsLoading(false);
-    navigate('/incomes');
   };
 
-  React.useEffect(() => {
-    error && setError('');
-  }, [form.watch()]);
+  // React.useEffect(() => {
+  //   error && setError('');
+  // }, [form.watch()]);
 
   const onBack = () => navigate(-1);
 
