@@ -39,20 +39,34 @@ export default function CreateSavingInstitution({
   onClose,
   refetch,
 }: CreateSavingInstitutionProps) {
-  const { createSavingInstitution } = useMutateSavingInstitution();
+  const { createInstitution, updateInstitution, isLoading } =
+    useMutateSavingInstitution();
 
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>('');
 
   const form = useForm<SavingInstitutionFormData>({
     resolver: zodResolver(SavingInstitutionValidator),
     defaultValues: {
-      name: editData?.name || '',
+      name: '',
     },
   });
 
+  React.useEffect(() => {
+    if (editData) {
+      form.reset({ name: editData.name });
+    }
+  }, [editData]);
+
   const onSubmit = async (data: SavingInstitutionFormData) => {
-    await createSavingInstitution({ data, setIsLoading, setError });
+    if (editData) {
+      await updateInstitution({
+        setError,
+        data,
+        institutionId: editData.id,
+      });
+    } else {
+      await createInstitution({ data, setError });
+    }
     refetch();
     handleClose();
   };
@@ -96,7 +110,7 @@ export default function CreateSavingInstitution({
               {isLoading && (
                 <Icons.spinner className='w-4 h-4 mr-2 animate-spin' />
               )}
-              Create
+              {editData ? 'Update' : 'Create'}
             </Button>
           </form>
         </Form>

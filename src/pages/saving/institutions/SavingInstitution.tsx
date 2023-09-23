@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import useSavingInstitution from '@/services/useSavingInstitutions';
@@ -7,27 +8,35 @@ import CreateSavingInstitution from '@/pages/saving/institutions/CreateSavingIns
 import InstitutionSkeleton from '@/components/skeletons/InstitutionSkeleton';
 import { Icons } from '@/components/Icons';
 import { SavingInstitution } from '@/types/collection';
+import useMutateSavingInstitution from '@/services/useMutateSavingInstitution';
 
 export default function SavingInstitutions() {
   const navigate = useNavigate();
 
   const { savingInstitutions, refetch, isLoading } = useSavingInstitution();
+  const { deleteInstitution, isLoading: deleteLoading } =
+    useMutateSavingInstitution();
 
   const [openCreate, setOpenCreate] = React.useState<boolean>(false);
-  const [editData, setEditData] = React.useState<SavingInstitution | null>(
-    null
-  );
+  const [mutationData, setMutationData] =
+    React.useState<SavingInstitution | null>(null);
 
   const onBack = () => navigate(-1);
 
   const onAdd = () => {
-    setEditData(null);
+    setMutationData(null);
     setOpenCreate(true);
   };
 
   const onEdit = (institution: SavingInstitution) => {
-    setEditData(institution);
+    setMutationData(institution);
     setOpenCreate(true);
+  };
+
+  const onDelete = async (institution: SavingInstitution) => {
+    setMutationData(institution);
+    await deleteInstitution({ institutionId: institution.id });
+    await refetch();
   };
 
   return (
@@ -67,11 +76,21 @@ export default function SavingInstitutions() {
                       variant='ghost'
                       className='p-0 hover:text-emerald-500'
                       onClick={() => onEdit(institution)}
+                      disabled={deleteLoading}
                     >
-                      <Icons.edit className='w-4 h-4' />
+                      <Icons.edit className='w-5 h-5' />
                     </Button>
-                    <Button variant='ghost' className='p-0 hover:text-red-500'>
-                      <Icons.delete className='w-4 h-4' />
+                    <Button
+                      variant='ghost'
+                      className='p-0 hover:text-red-500'
+                      onClick={() => onDelete(institution)}
+                      disabled={deleteLoading}
+                    >
+                      {deleteLoading && mutationData?.id === institution.id ? (
+                        <Icons.spinner className='w-5 h-5 animate-spin' />
+                      ) : (
+                        <Icons.delete className='w-5 h-5' />
+                      )}
                     </Button>
                   </div>
                 </div>
@@ -92,7 +111,7 @@ export default function SavingInstitutions() {
         open={openCreate}
         onClose={() => setOpenCreate(false)}
         refetch={refetch}
-        editData={editData}
+        editData={mutationData}
       />
     </div>
   );

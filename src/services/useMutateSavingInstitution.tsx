@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { supabase } from '@/config/supabase';
 import { useAuthStore } from '@/store/useAuthStore';
 import { SavingInstitutionFormData } from '@/lib/validator/institution';
@@ -14,13 +15,12 @@ const getSavingInstitutionPayload = (
 
 const useMutateSavingInstitution = () => {
   const { auth } = useAuthStore();
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  const createSavingInstitution = async ({
-    setIsLoading,
+  const createInstitution = async ({
     data,
     setError,
   }: {
-    setIsLoading: (loading: boolean) => void;
     data: SavingInstitutionFormData;
     setError: (error: string) => void;
   }) => {
@@ -40,13 +40,11 @@ const useMutateSavingInstitution = () => {
     setIsLoading(false);
   };
 
-  const updateSavingInstitution = async ({
-    setIsLoading,
+  const updateInstitution = async ({
     data,
     institutionId,
     setError,
   }: {
-    setIsLoading: (loading: boolean) => void;
     data: SavingInstitutionFormData;
     institutionId: string;
     setError: (error: string) => void;
@@ -68,7 +66,32 @@ const useMutateSavingInstitution = () => {
     setIsLoading(false);
   };
 
-  return { createSavingInstitution, updateSavingInstitution };
+  const deleteInstitution = async ({
+    institutionId,
+  }: {
+    institutionId: string;
+  }) => {
+    setIsLoading(true);
+
+    const { error } = await supabase
+      .from('saving_institutions')
+      .delete()
+      .eq('id', institutionId);
+
+    if (error) {
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(false);
+  };
+
+  return {
+    createInstitution,
+    updateInstitution,
+    deleteInstitution,
+    isLoading,
+  };
 };
 
 export default useMutateSavingInstitution;
