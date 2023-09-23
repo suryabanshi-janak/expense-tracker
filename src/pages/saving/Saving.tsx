@@ -86,12 +86,18 @@ export default function Savings() {
 
   return (
     <>
-      <div className='flex justify-end mb-4'>
+      <div className='flex justify-end gap-4 mb-4'>
         <Link
           to='/savings/create'
           className={cn(buttonVariants({ variant: 'default' }))}
         >
           Create saving
+        </Link>
+        <Link
+          to='/savings/institutions'
+          className={cn(buttonVariants({ variant: 'secondary' }))}
+        >
+          View institutions
         </Link>
       </div>
 

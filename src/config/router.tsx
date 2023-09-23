@@ -13,6 +13,7 @@ import Expense from '@/pages/expense/Expense';
 import CreateExpense from '@/pages/expense/CreateExpense';
 import CreateIncome from '@/pages/income/CreateIncome';
 import CreateSaving from '@/pages/saving/CreateSaving';
+import SavingInstitution from '@/pages/saving/institutions/SavingInstitution';
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +45,7 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <Saving /> },
           { path: 'create', element: <CreateSaving /> },
+          { path: 'institutions', element: <SavingInstitution /> },
         ],
       },
       {

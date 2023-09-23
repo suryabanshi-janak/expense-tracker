@@ -7,6 +7,7 @@ import {
   ArrowUpDown,
   Copy,
   Trash,
+  FileEdit,
 } from 'lucide-react';
 
 export const Icons = {
@@ -18,4 +19,5 @@ export const Icons = {
   sort: ArrowUpDown,
   copy: Copy,
   delete: Trash,
+  edit: FileEdit,
 };

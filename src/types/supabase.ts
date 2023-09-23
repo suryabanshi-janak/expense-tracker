@@ -122,6 +122,7 @@ export interface Database {
           payee_payor: string;
           status: Database['public']['Enums']['loan_status_enum'];
           updated_at: string | null;
+          user_id: string;
         };
         Insert: {
           amount: number;
@@ -132,6 +133,7 @@ export interface Database {
           payee_payor: string;
           status?: Database['public']['Enums']['loan_status_enum'];
           updated_at?: string | null;
+          user_id?: string;
         };
         Update: {
           amount?: number;
@@ -142,6 +144,7 @@ export interface Database {
           payee_payor?: string;
           status?: Database['public']['Enums']['loan_status_enum'];
           updated_at?: string | null;
+          user_id?: string;
         };
         Relationships: [];
       };
@@ -150,19 +153,22 @@ export interface Database {
           created_at: string;
           id: string;
           name: string;
-          updated_at: string;
+          updated_at: string | null;
+          user_id: string;
         };
         Insert: {
           created_at?: string;
           id?: string;
           name: string;
-          updated_at: string;
+          updated_at?: string | null;
+          user_id?: string;
         };
         Update: {
           created_at?: string;
           id?: string;
           name?: string;
-          updated_at?: string;
+          updated_at?: string | null;
+          user_id?: string;
         };
         Relationships: [];
       };
@@ -175,6 +181,7 @@ export interface Database {
           institution: string;
           saving_date: string;
           updated_at: string | null;
+          user_id: string;
         };
         Insert: {
           amount: number;
@@ -184,6 +191,7 @@ export interface Database {
           institution: string;
           saving_date: string;
           updated_at?: string | null;
+          user_id?: string;
         };
         Update: {
           amount?: number;
@@ -193,6 +201,7 @@ export interface Database {
           institution?: string;
           saving_date?: string;
           updated_at?: string | null;
+          user_id?: string;
         };
         Relationships: [
           {
@@ -215,6 +224,7 @@ export interface Database {
           transaction_date: string;
           transaction_type: Database['public']['Enums']['transaction_type_enum'];
           updated_at: string | null;
+          user_id: string;
         };
         Insert: {
           amount: number;
@@ -227,6 +237,7 @@ export interface Database {
           transaction_date: string;
           transaction_type?: Database['public']['Enums']['transaction_type_enum'];
           updated_at?: string | null;
+          user_id?: string;
         };
         Update: {
           amount?: number;
@@ -239,6 +250,7 @@ export interface Database {
           transaction_date?: string;
           transaction_type?: Database['public']['Enums']['transaction_type_enum'];
           updated_at?: string | null;
+          user_id?: string;
         };
         Relationships: [
           {
