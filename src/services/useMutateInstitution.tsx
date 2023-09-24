@@ -13,7 +13,7 @@ const getSavingInstitutionPayload = (
   };
 };
 
-const useMutateSavingInstitution = () => {
+const useMutateInstitution = () => {
   const { auth } = useAuthStore();
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -94,4 +94,4 @@ const useMutateSavingInstitution = () => {
   };
 };
 
-export default useMutateSavingInstitution;
+export default useMutateInstitution;

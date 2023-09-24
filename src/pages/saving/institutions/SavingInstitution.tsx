@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import useSavingInstitution from '@/services/useSavingInstitutions';
+import useSavingInstitution from '@/services/useSavingInstitution';
 import CreateSavingInstitution from '@/pages/saving/institutions/CreateSavingInstitution';
 import InstitutionSkeleton from '@/components/skeletons/InstitutionSkeleton';
 import { Icons } from '@/components/Icons';
 import { SavingInstitution } from '@/types/collection';
-import useMutateSavingInstitution from '@/services/useMutateSavingInstitution';
+import useMutateSavingInstitution from '@/services/useMutateInstitution';
 
 export default function SavingInstitutions() {
   const navigate = useNavigate();
@@ -78,7 +78,7 @@ export default function SavingInstitutions() {
                       onClick={() => onEdit(institution)}
                       disabled={deleteLoading}
                     >
-                      <Icons.edit className='w-5 h-5' />
+                      <Icons.edit className='w-4 h-4' />
                     </Button>
                     <Button
                       variant='ghost'
@@ -87,9 +87,9 @@ export default function SavingInstitutions() {
                       disabled={deleteLoading}
                     >
                       {deleteLoading && mutationData?.id === institution.id ? (
-                        <Icons.spinner className='w-5 h-5 animate-spin' />
+                        <Icons.spinner className='w-4 h-4 animate-spin' />
                       ) : (
-                        <Icons.delete className='w-5 h-5' />
+                        <Icons.delete className='w-4 h-4' />
                       )}
                     </Button>
                   </div>

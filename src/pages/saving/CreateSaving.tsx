@@ -30,7 +30,7 @@ import useTransaction from '@/services/useTransaction';
 import { SavingFormData, SavingValidator } from '@/lib/validator/saving';
 import useMutateSaving from '@/services/useMutateSaving';
 import { useSavingStore } from '@/store/useSavingStore';
-import useSavingInstitution from '@/services/useSavingInstitutions';
+import useSavingInstitution from '@/services/useSavingInstitution';
 
 export default function CreateSaving() {
   const { savings } = useSavingStore();
@@ -38,7 +38,11 @@ export default function CreateSaving() {
   const { transactions } = useTransaction();
   const { savingInstitutions, isLoading: isInstitutionLoading } =
     useSavingInstitution();
-  const { createSaving, updateSaving } = useMutateSaving();
+  const {
+    createSaving,
+    updateSaving,
+    isLoading: mutationLoading,
+  } = useMutateSaving();
 
   const navigate = useNavigate();
 
@@ -52,15 +56,12 @@ export default function CreateSaving() {
     return null;
   }, [searchParams, savings]);
 
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string>('');
-
   const form = useForm<SavingFormData>({
     resolver: zodResolver(SavingValidator),
     defaultValues: {
       savings: [
         {
-          institution: '',
+          institution: saving?.institution ?? '',
           amount: String(saving?.amount) ?? '',
           description: saving?.description ?? '',
           saving_date: saving?.saving_date
@@ -78,9 +79,9 @@ export default function CreateSaving() {
 
   const onSubmit = async (data: SavingFormData) => {
     if (saving) {
-      updateSaving({ data, saving, setIsLoading, setError, transactions });
+      updateSaving({ data, savingId: saving.id, transactions });
     } else {
-      createSaving({ data, setIsLoading, setError });
+      createSaving({ data });
     }
   };
 
@@ -95,12 +96,6 @@ export default function CreateSaving() {
       <Button variant='outline' onClick={onBack} className='mb-4'>
         Back
       </Button>
-
-      {error && (
-        <p className='text-sm font-semibold text-center text-red-400'>
-          {error}
-        </p>
-      )}
 
       <h4 className='text-2xl font-bold tracking-tight scroll-m-20'>
         {saving ? 'Edit' : 'Create'} saving
@@ -228,8 +223,12 @@ export default function CreateSaving() {
           ))}
 
           <div className='flex justify-center'>
-            <Button type='submit' className='px-8 mt-8' disabled={isLoading}>
-              {isLoading && (
+            <Button
+              type='submit'
+              className='px-8 mt-8'
+              disabled={mutationLoading}
+            >
+              {mutationLoading && (
                 <Icons.spinner className='w-4 h-4 mr-2 animate-spin' />
               )}
               {saving ? 'Update' : 'Create'}

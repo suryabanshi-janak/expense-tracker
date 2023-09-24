@@ -23,7 +23,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/Icons';
-import useMutateSavingInstitution from '@/services/useMutateSavingInstitution';
+import useMutateSavingInstitution from '@/services/useMutateInstitution';
 import { SavingInstitution } from '@/types/collection';
 
 interface CreateSavingInstitutionProps {

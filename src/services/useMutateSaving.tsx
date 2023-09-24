@@ -1,10 +1,14 @@
+import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { supabase } from '@/config/supabase';
 import { getTransactionPayload } from '@/lib/modifier';
 import { useAuthStore } from '@/store/useAuthStore';
 import { TransactionType } from '@/types';
-import { Saving, Transaction } from '@/types/collection';
+import { Transaction } from '@/types/collection';
 import { SavingFormData, SingleSavingFormData } from '@/lib/validator/saving';
+import { toast } from '@/components/ui/use-toast';
+import onResponse from './util';
 
 const getSavingPayload = (saving: SingleSavingFormData, userId: string) => {
   return {
@@ -19,16 +23,9 @@ const getSavingPayload = (saving: SingleSavingFormData, userId: string) => {
 const useMutateSaving = () => {
   const { auth } = useAuthStore();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  const createSaving = async ({
-    setIsLoading,
-    data,
-    setError,
-  }: {
-    setIsLoading: (loading: boolean) => void;
-    data: SavingFormData;
-    setError: (error: string) => void;
-  }) => {
+  const createSaving = async ({ data }: { data: SavingFormData }) => {
     setIsLoading(true);
 
     const newSaving = data.savings.map((saving) =>
@@ -47,31 +44,31 @@ const useMutateSaving = () => {
         .from('transactions')
         .insert(transactions);
       if (transactionError) {
-        // show toaster message
+        toast({
+          title: 'Something went wrong',
+          description: transactionError.message,
+          variant: 'destructive',
+        });
       }
     }
 
-    if (res?.error) {
-      setError(res.error.message);
-      setIsLoading(false);
-      return;
-    }
-    setIsLoading(false);
-    navigate('/savings');
+    const { success } = onResponse({
+      response: res,
+      setIsLoading,
+      successMessage: 'Saving created successfully.',
+    });
+
+    if (success) navigate('/savings');
   };
 
   const updateSaving = async ({
-    setIsLoading,
-    saving,
+    savingId,
     data,
     transactions,
-    setError,
   }: {
-    setIsLoading: (loading: boolean) => void;
-    saving: Saving;
+    savingId: string;
     data: SavingFormData;
     transactions: Transaction[];
-    setError: (error: string) => void;
   }) => {
     setIsLoading(true);
 
@@ -79,7 +76,7 @@ const useMutateSaving = () => {
     const res = await supabase
       .from('savings')
       .update(savingData)
-      .eq('id', saving.id)
+      .eq('id', savingId)
       .select('*');
 
     if (res.data) {
@@ -98,21 +95,37 @@ const useMutateSaving = () => {
           .update(transactionPayload)
           .eq('id', transaction.id);
         if (transactionError) {
-          // show toaster message
+          toast({
+            title: 'Something went wrong',
+            description: transactionError.message,
+            variant: 'destructive',
+          });
         }
       }
     }
 
-    if (res?.error) {
-      setError(res.error.message);
-      setIsLoading(false);
-      return;
-    }
-    setIsLoading(false);
-    navigate('/savings');
+    const { success } = onResponse({
+      response: res,
+      setIsLoading,
+      successMessage: 'Saving updated successfully.',
+    });
+
+    if (success) navigate('/savings');
   };
 
-  return { createSaving, updateSaving };
+  const deleteSaving = async ({ savingId }: { savingId: string }) => {
+    setIsLoading(true);
+
+    const response = await supabase.from('savings').delete().eq('id', savingId);
+
+    return onResponse({
+      response,
+      setIsLoading,
+      successMessage: 'Saving deleted successfully.',
+    });
+  };
+
+  return { createSaving, updateSaving, isLoading, deleteSaving };
 };
 
 export default useMutateSaving;

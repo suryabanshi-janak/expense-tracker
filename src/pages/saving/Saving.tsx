@@ -14,17 +14,20 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import useSaving from '@/services/useSaving';
-import { Saving } from '@/types/collection';
+import { Saving, SavingInstitution } from '@/types/collection';
+import useSavingInstitution from '@/services/useSavingInstitution';
+import useMutateSaving from '@/services/useMutateSaving';
 
 export default function Savings() {
   const navigate = useNavigate();
 
   const { isLoading, savings, refetch, pageCount } = useSaving();
-  // const { onDeleteIncome } = useDeleteIncome();
+  const { savingInstitutions } = useSavingInstitution();
+  const { deleteSaving } = useMutateSaving();
 
-  const onDelete = async (id: string) => {
-    // await onDeleteIncome(id);
-    // await refetch();
+  const onDelete = async (savingId: string) => {
+    const { success } = await deleteSaving({ savingId });
+    if (success) await refetch();
   };
 
   const columns: ColumnDef<Saving>[] = [
@@ -35,19 +38,28 @@ export default function Savings() {
     {
       accessorKey: 'amount',
       header: 'Amount',
+      cell: ({ row }) => <p>Rs. {row.getValue('amount')}</p>,
     },
     {
       accessorKey: 'institution',
       header: 'Instituion',
-      cell: ({ row }) => (
-        <div className=''>Rs. {row.getValue('institution')}</div>
-      ),
+      cell: ({ row }) => {
+        const institution =
+          savingInstitutions?.find(
+            (inst: SavingInstitution) => row.getValue('institution') === inst.id
+          )?.name || '-';
+
+        return <p className='font-medium'>{institution}</p>;
+      },
     },
     {
-      accessorKey: 'saving',
+      accessorKey: 'saving_date',
       header: 'Date of saving',
       cell: ({ row }) => {
-        const formatedDate = format(new Date(row.getValue('saving')), 'PPP');
+        const formatedDate = format(
+          new Date(row.getValue('saving_date')),
+          'PPP'
+        );
         return <p>{formatedDate}</p>;
       },
     },
@@ -55,7 +67,7 @@ export default function Savings() {
       id: 'actions',
       enableHiding: false,
       cell: ({ row }) => {
-        const { id: incomeId } = row.original;
+        const { id: savingId } = row.original;
 
         return (
           <DropdownMenu>
@@ -69,12 +81,12 @@ export default function Savings() {
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() =>
-                  navigate(`/incomes/create?income_id=${incomeId}`)
+                  navigate(`/savings/create?saving_id=${savingId}`)
                 }
               >
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onDelete(incomeId)}>
+              <DropdownMenuItem onClick={() => onDelete(savingId)}>
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
