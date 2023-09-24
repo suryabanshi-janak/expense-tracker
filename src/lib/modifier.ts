@@ -70,9 +70,15 @@ export const getTransactionPayload = ({
     payload.transaction_date = (data as Saving).saving_date;
     payload.saving_id = (data as Income).id;
   }
+  if (type === TransactionType.LOAN) {
+    payload.transaction_date = (data as Loan).loan_date;
+    payload.loan_id = (data as Loan).id;
+  }
   if (update) {
     delete payload.expense_id;
     delete payload.income_id;
+    delete payload.saving_id_id;
+    delete payload.loan_id_id;
   }
   return payload;
 };

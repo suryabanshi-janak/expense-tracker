@@ -10,3 +10,14 @@ export enum TransactionType {
   INCOME = 'Income',
   SAVING = 'Saving',
 }
+
+export enum LoanStatus {
+  PENDING = 'Pending',
+  PAID = 'Paid',
+  DEFAULTED = 'Defaulted',
+}
+
+export enum LoanTransactionType {
+  LEND = 'Lend',
+  BORROW = 'Borrow',
+}

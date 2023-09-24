@@ -8,12 +8,13 @@ import Income from '@/pages/income/Income';
 import Saving from '@/pages/saving/Saving';
 import Category from '@/pages/category/Category';
 import CreateCategory from '@/pages/category/CreateCategory';
-import Loan from '@/pages/Loan';
+import Loan from '@/pages/loan/Loan';
 import Expense from '@/pages/expense/Expense';
 import CreateExpense from '@/pages/expense/CreateExpense';
 import CreateIncome from '@/pages/income/CreateIncome';
 import CreateSaving from '@/pages/saving/CreateSaving';
 import SavingInstitution from '@/pages/saving/institutions/SavingInstitution';
+import CreateLoan from '@/pages/loan/CreateLoan';
 
 export const router = createBrowserRouter([
   {
@@ -55,7 +56,13 @@ export const router = createBrowserRouter([
           { path: 'create', element: <CreateCategory /> },
         ],
       },
-      { path: '/loans', element: <Loan /> },
+      {
+        path: '/loans',
+        children: [
+          { index: true, element: <Loan /> },
+          { path: 'create', element: <CreateLoan /> },
+        ],
+      },
     ],
   },
 ]);

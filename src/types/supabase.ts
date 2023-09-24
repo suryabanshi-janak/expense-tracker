@@ -116,35 +116,35 @@ export interface Database {
         Row: {
           amount: number;
           created_at: string;
-          description: string | null;
-          id: number;
+          description: string;
+          id: string;
           loan_date: string;
+          loan_transaction_type: Database['public']['Enums']['loan_transaction_type_enum'];
           payee_payor: string;
           status: Database['public']['Enums']['loan_status_enum'];
           updated_at: string | null;
-          user_id: string;
         };
         Insert: {
           amount: number;
           created_at?: string;
-          description?: string | null;
-          id?: number;
+          description: string;
+          id?: string;
           loan_date: string;
+          loan_transaction_type: Database['public']['Enums']['loan_transaction_type_enum'];
           payee_payor: string;
-          status?: Database['public']['Enums']['loan_status_enum'];
+          status: Database['public']['Enums']['loan_status_enum'];
           updated_at?: string | null;
-          user_id?: string;
         };
         Update: {
           amount?: number;
           created_at?: string;
-          description?: string | null;
-          id?: number;
+          description?: string;
+          id?: string;
           loan_date?: string;
+          loan_transaction_type?: Database['public']['Enums']['loan_transaction_type_enum'];
           payee_payor?: string;
           status?: Database['public']['Enums']['loan_status_enum'];
           updated_at?: string | null;
-          user_id?: string;
         };
         Relationships: [];
       };
@@ -220,6 +220,7 @@ export interface Database {
           expense_id: string | null;
           id: string;
           income_id: string | null;
+          loan_id: string | null;
           saving_id: string | null;
           transaction_date: string;
           transaction_type: Database['public']['Enums']['transaction_type_enum'];
@@ -233,6 +234,7 @@ export interface Database {
           expense_id?: string | null;
           id?: string;
           income_id?: string | null;
+          loan_id?: string | null;
           saving_id?: string | null;
           transaction_date: string;
           transaction_type?: Database['public']['Enums']['transaction_type_enum'];
@@ -246,6 +248,7 @@ export interface Database {
           expense_id?: string | null;
           id?: string;
           income_id?: string | null;
+          loan_id?: string | null;
           saving_id?: string | null;
           transaction_date?: string;
           transaction_type?: Database['public']['Enums']['transaction_type_enum'];
@@ -266,6 +269,12 @@ export interface Database {
             referencedColumns: ['id'];
           },
           {
+            foreignKeyName: 'transactions_loan_id_fkey';
+            columns: ['loan_id'];
+            referencedRelation: 'loans';
+            referencedColumns: ['id'];
+          },
+          {
             foreignKeyName: 'transactions_saving_id_fkey';
             columns: ['saving_id'];
             referencedRelation: 'savings';
@@ -281,7 +290,9 @@ export interface Database {
       [_ in never]: never;
     };
     Enums: {
+      counter_party_enum: 'Lender' | 'Borrower';
       loan_status_enum: 'Pending' | 'Paid' | 'Defaulted';
+      loan_transaction_type_enum: 'Lend' | 'Borrow';
       transaction_type_enum: 'Expense' | 'Income' | 'Saving' | 'Loan';
     };
     CompositeTypes: {
