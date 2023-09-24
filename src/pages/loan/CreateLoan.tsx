@@ -23,6 +23,14 @@ import { useLoanStore } from '@/store/useLoanStore';
 import useMutateLoan from '@/services/useMutateLoan';
 import { LoanFormData, LoanValidator } from '@/lib/validator/loan';
 import { LoanStatus, LoanTransactionType } from '@/types';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 export default function CreateLoan() {
   const { loans } = useLoanStore();
@@ -116,6 +124,82 @@ export default function CreateLoan() {
                     <FormLabel>Amount</FormLabel>
                     <FormControl>
                       <Input type='number' placeholder='Amount' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name={`loans.${index}.payee_payor`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Payee/Payor</FormLabel>
+                    <FormControl>
+                      <Input type='text' placeholder='Name' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name={`loans.${index}.status`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Status</FormLabel>
+                    <FormControl>
+                      <Select
+                        {...field}
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className='w-full'>
+                          <SelectValue placeholder='Select a categpry' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            {Object.values(LoanStatus).map((status) => (
+                              <SelectItem value={status} key={status}>
+                                {status}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name={`loans.${index}.loan_transaction_type`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Type</FormLabel>
+                    <FormControl>
+                      <Select
+                        {...field}
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className='w-full'>
+                          <SelectValue placeholder='Select a categpry' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            {Object.values(LoanTransactionType).map((type) => (
+                              <SelectItem value={type} key={type}>
+                                {type}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

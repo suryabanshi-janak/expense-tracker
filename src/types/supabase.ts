@@ -123,6 +123,7 @@ export interface Database {
           payee_payor: string;
           status: Database['public']['Enums']['loan_status_enum'];
           updated_at: string | null;
+          user_id: string;
         };
         Insert: {
           amount: number;
@@ -134,6 +135,7 @@ export interface Database {
           payee_payor: string;
           status: Database['public']['Enums']['loan_status_enum'];
           updated_at?: string | null;
+          user_id?: string;
         };
         Update: {
           amount?: number;
@@ -145,6 +147,7 @@ export interface Database {
           payee_payor?: string;
           status?: Database['public']['Enums']['loan_status_enum'];
           updated_at?: string | null;
+          user_id?: string;
         };
         Relationships: [];
       };

@@ -29,12 +29,13 @@ export default function Transactions() {
         return (
           <p
             className={cn(
-              'rounded-md border inline-block px-4 py-1',
+              'rounded-md border min-w-[85px] inline-block px-4 py-1',
               type === TransactionType.EXPENSE && 'bg-red-200 border-red-400',
               type === TransactionType.INCOME &&
                 'bg-green-200 border-green-400',
               type === TransactionType.SAVING &&
-                'bg-yellow-200 border-yellow-400'
+                'bg-yellow-200 border-yellow-400',
+              type === TransactionType.LOAN && 'bg-orange-200 border-orange-400'
             )}
           >
             {type}

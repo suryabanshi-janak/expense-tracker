@@ -30,6 +30,10 @@ export default function Loans() {
 
   const columns: ColumnDef<Loan>[] = [
     {
+      accessorKey: 'payee_payor',
+      header: 'Payee/Payor',
+    },
+    {
       accessorKey: 'description',
       header: 'Description',
     },
@@ -37,6 +41,14 @@ export default function Loans() {
       accessorKey: 'amount',
       header: 'Amount',
       cell: ({ row }) => <div className=''>Rs. {row.getValue('amount')}</div>,
+    },
+    {
+      accessorKey: 'status',
+      header: 'Status',
+    },
+    {
+      accessorKey: 'loan_transaction_type',
+      header: 'Transaction Type',
     },
     {
       accessorKey: 'loan_date',
