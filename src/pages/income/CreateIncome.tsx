@@ -161,6 +161,7 @@ export default function CreateIncome() {
                     {fields.length > 1 && (
                       <Button
                         type='button'
+                        variant='destructive'
                         className='px-2'
                         onClick={() => remove(index)}
                       >

@@ -74,7 +74,7 @@ export default function SavingInstitutions() {
                   <div className='space-x-4'>
                     <Button
                       variant='ghost'
-                      className='p-0 hover:text-emerald-500'
+                      className='p-0 hover:text-emerald-500 h-fit'
                       onClick={() => onEdit(institution)}
                       disabled={deleteLoading}
                     >
@@ -82,7 +82,7 @@ export default function SavingInstitutions() {
                     </Button>
                     <Button
                       variant='ghost'
-                      className='p-0 hover:text-red-500'
+                      className='p-0 hover:text-red-500 h-fit'
                       onClick={() => onDelete(institution)}
                       disabled={deleteLoading}
                     >

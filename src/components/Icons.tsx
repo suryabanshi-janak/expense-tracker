@@ -8,6 +8,7 @@ import {
   Copy,
   Trash,
   FileEdit,
+  User2
 } from 'lucide-react';
 
 export const Icons = {
@@ -20,4 +21,5 @@ export const Icons = {
   copy: Copy,
   delete: Trash,
   edit: FileEdit,
+  user: User2
 };

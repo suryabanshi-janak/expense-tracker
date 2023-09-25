@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import { supabase } from '@/config/supabase';
+import { Icons } from './Icons';
 
 const navs: { title: string; href: string }[] = [
   { title: 'Dashboad', href: '/' },
@@ -33,6 +34,8 @@ export function Header() {
   const user = useAuthStore((state) => state.auth?.user);
   const authStore = useAuthStore();
 
+  const { pathname } = useLocation();
+
   const onLogout = async () => {
     let { error } = await supabase.auth.signOut();
 
@@ -45,7 +48,7 @@ export function Header() {
   };
 
   return (
-    <header className='sticky top-0 z-40 w-full border-b bg-background'>
+    <header className='sticky top-0 z-40 w-full border-b bg-primary'>
       <div className='container flex items-center justify-between h-16'>
         <NavigationMenu>
           <NavigationMenuList>
@@ -53,7 +56,11 @@ export function Header() {
               {navs.map((nav) => (
                 <NavLink to={nav.href} key={nav.title}>
                   <div
-                    className={cn(navigationMenuTriggerStyle(), 'text-base')}
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      'text-base text-white bg-transparent hover:bg-transparent hover:text-secondary',
+                      pathname === nav.href && 'text-secondary'
+                    )}
                   >
                     {nav.title}
                   </div>
@@ -67,9 +74,11 @@ export function Header() {
           <DropdownMenuTrigger asChild>
             <div className='flex items-center gap-2 cursor-pointer'>
               <Avatar>
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarFallback>
+                  <Icons.user className='w-4 h-4' />
+                </AvatarFallback>
               </Avatar>
-              <p>{user?.email}</p>
+              <p className='text-white'>{user?.email}</p>
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent className='w-56'>
