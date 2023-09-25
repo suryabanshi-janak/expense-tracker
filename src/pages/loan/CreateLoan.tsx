@@ -31,6 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Combobox } from '@/components/Combobox';
 
 export default function CreateLoan() {
   const { loans } = useLoanStore();
@@ -137,7 +138,12 @@ export default function CreateLoan() {
                   <FormItem>
                     <FormLabel>Payee/Payor</FormLabel>
                     <FormControl>
-                      <Input type='text' placeholder='Name' {...field} />
+                      <Combobox
+                        field={field}
+                        onCommandSelect={(value) =>
+                          form.setValue(`loans.${index}.payee_payor`, value)
+                        }
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
